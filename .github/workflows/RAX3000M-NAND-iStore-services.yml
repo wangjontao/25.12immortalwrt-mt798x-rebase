@@ -99,7 +99,7 @@ jobs:
           test -s "$OPENCLASH_TMP/OpenClash-${OPENCLASH_COMMIT}/luci-app-openclash/Makefile"
           cp -a "$OPENCLASH_TMP/OpenClash-${OPENCLASH_COMMIT}/luci-app-openclash" package/
 
-          rm -rf package/npc package/luci-app-nps package/luci-app-npc
+          rm -rf package/npc package/luci-app-nps package/luci-app-npc package/feeds/luci/luci-app-nps
           git clone https://github.com/djylb/nps-openwrt.git /tmp/nps
           git -C /tmp/nps checkout "$NPS_COMMIT"
           cp -a /tmp/nps/npc package/
@@ -107,7 +107,8 @@ jobs:
           git -C /tmp/lean-luci sparse-checkout set applications/luci-app-nps
           cp -a /tmp/lean-luci/applications/luci-app-nps package/
           sed -i 's#include ../../luci.mk#include $(TOPDIR)/feeds/luci/luci.mk#' package/luci-app-nps/Makefile
-          sed -i 's/ +npc//' package/luci-app-nps/Makefile
+          sed -i 's/[[:space:]]*+npc//g' package/luci-app-nps/Makefile
+          ! grep -q '+npc' package/luci-app-nps/Makefile
 
           rm -rf package/luci-theme-argon package/luci-app-argon-config
           git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
